@@ -1,7 +1,6 @@
 package com.akshat.timer.ui.screen
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -32,7 +29,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun TimerClock(viewModel: StopWatchViewModel){
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    Log.d("TimerClock", "TimerClock: ${uiState.value}")
     val textFieldValue = uiState.value.timerString
 
     val configuration = LocalConfiguration.current

@@ -1,6 +1,5 @@
 package com.akshat.timer.ui.screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.akshat.timer.data.ScreenTypes
@@ -47,12 +46,9 @@ class StopWatchViewModel @Inject constructor(
     }
 
     fun updateCurrentScreen(screenType: ScreenTypes){
-        _uiState.compareAndSet(_uiState.value, TimerUiState())
-        _uiState.update {
-            it.copy(
-                currentScreen = screenType)
-        }
-        Log.d("TimerClock", "Changing screen & uistate now is ${_uiState.value}")
+        _uiState.compareAndSet(_uiState.value, TimerUiState(currentScreen = screenType))
+
+     //   Log.d("TimerClock", "Changing screen & uistate now is ${_uiState.value}")
     }
 
     fun toggleStartStop() {
@@ -94,7 +90,6 @@ class StopWatchViewModel @Inject constructor(
 
     fun addTime(num: Int) {
         var newValue = _uiState.value.elapsedTime
-        Log.d("TimerClock", "addTime: $newValue to $newValue && shifting right gives ${newValue*10}")
         newValue =(newValue*10).plus(num)
         _uiState.update {
             it.copy(
@@ -102,7 +97,6 @@ class StopWatchViewModel @Inject constructor(
                 elapsedTime = newValue
             )
         }
-        Log.d("TimerClock", "uistate now is ${_uiState.value}")
     }
 
     fun beginCountDown(){
@@ -112,10 +106,10 @@ class StopWatchViewModel @Inject constructor(
     }
 
     private suspend fun startCountDown() {
-        Log.d("TimerClock", "beginCountDown: ${_uiState.value.timerString}")
         while (true) {
             delay(COUNTDOWN_TIMER) // Delay for 100 millisecond
-            val time = ((_uiState.value.elapsedTime) - COUNTDOWN_TIMER/1000L)
+            var time = ((_uiState.value.elapsedTime) - COUNTDOWN_TIMER/1000L)
+            time = if (time < 0) 0 else time
             _uiState.update {
                 it.copy(
                     elapsedTime = time,
