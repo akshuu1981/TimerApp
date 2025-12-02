@@ -51,14 +51,20 @@ fun MainTimerScreen(
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = { TimerTopBar() },
         bottomBar = { TimerBottomBar(
-            currentTab = ScreenTypes.StopWatch,
-            onTabPressed = {
-                viewModel.updateCurrentScreen(it)
-                navController.navigate(it.name,
-                    navOptions = NavOptions.Builder()
-                        .setLaunchSingleTop(true)
-                        .setRestoreState(true)
-                        .build())
+            currentTab = currentScreen,
+            onTabPressed = { screenType ->
+                viewModel.updateCurrentScreen(screenType)
+
+                navController.navigate(screenType.name){
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    // Avoid multiple copies of the same destination when
+                    // re-selecting the same item
+                    launchSingleTop = true
+                    // Restore state when re-selecting a previously selected item
+                    restoreState = true
+                }
             },
             items = getScreenContents(context),
             modifier = Modifier.fillMaxWidth()
